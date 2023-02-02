@@ -18,7 +18,7 @@ order by c.customer_id;
 
 -- Select the name and email address of all the customers who have rented the "Action" movies.
 -- Write the query using multiple join statements
-select distinct concat(c.first_name, ' ', c.last_name) as customer_name, c.email, ca.name as film_category
+select concat(c.first_name, ' ', c.last_name) as customer_name, c.email, ca.name as film_category
 from customer c
 join rental r on c.customer_id = r.customer_id
 join inventory i on r.inventory_id = i.inventory_id
@@ -26,16 +26,19 @@ join film f on i.film_id = f.film_id
 join film_category fc on f.film_id = fc.film_id
 join category ca on fc.category_id = ca.category_id
 where ca.name = 'Action'
+group by email, customer_name
 order by customer_name;
 
+
 -- Write the query using sub queries with multiple WHERE clause and IN condition
-select distinct concat(first_name, ' ', last_name) as customer_name, email
+select concat(first_name, ' ', last_name) as customer_name, email
 from customer 
 where customer_id in (select customer_id from rental
 where inventory_id in (select inventory_id from inventory
 where film_id in (select film_id from film where film_id in (select film_id from film_category
 where category_id = (select category_id from category
 where name = 'Action')))))
+group by email, customer_name
 order by customer_name;
 -- The two queries produce the same results
 
